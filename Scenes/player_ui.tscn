@@ -1,0 +1,211 @@
+[gd_scene load_steps=12 format=3 uid="uid://cs1gdvdlh7iug"]
+
+[ext_resource type="Texture2D" uid="uid://bhf8m2q3nh5dy" path="res://Assets/Sprites/Life Bar.png" id="1_dxtgh"]
+[ext_resource type="Script" uid="uid://dy8mpc3jjrj22" path="res://Scripts/player_ui.gd" id="1_qipxh"]
+[ext_resource type="Texture2D" uid="uid://bgfr5rimp424u" path="res://Assets/Sprites/Life Bar - Progress.png" id="2_qipxh"]
+[ext_resource type="Texture2D" uid="uid://3py7x1fbu2hs" path="res://Assets/Atlas Maps/player_ui_slot.tres" id="4_jbpjp"]
+[ext_resource type="Texture2D" uid="uid://dtbhdif41mvqr" path="res://Assets/Sprites/UI Abilities.png" id="5_vi3dy"]
+[ext_resource type="Texture2D" uid="uid://cox2vmivhduqd" path="res://Assets/Atlas Maps/player_ui_slot_highlight.tres" id="6_jbpjp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jbpjp"]
+atlas = ExtResource("5_vi3dy")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_jbpjp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uflt7"]
+atlas = ExtResource("5_vi3dy")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6jssq"]
+atlas = ExtResource("5_vi3dy")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3nrpj"]
+atlas = ExtResource("5_vi3dy")
+region = Rect2(32, 0, 32, 32)
+
+[node name="PlayerUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 2.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qipxh")
+
+[node name="PlayerHealthBar" type="TextureProgressBar" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_left = 381.0
+offset_top = 7.0
+offset_right = 509.0
+offset_bottom = 47.0
+scale = Vector2(3, 1.5)
+texture_over = ExtResource("1_dxtgh")
+texture_progress = ExtResource("2_qipxh")
+
+[node name="Ability Slots" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 57.0
+offset_top = -10.0
+offset_right = 97.0
+offset_bottom = 30.0
+
+[node name="AbilitySlot4" type="TextureRect" parent="Ability Slots"]
+z_index = 4
+texture_filter = 1
+layout_mode = 0
+offset_left = 600.0
+offset_top = 580.0
+offset_right = 632.0
+offset_bottom = 612.0
+scale = Vector2(2, 2)
+texture = ExtResource("4_jbpjp")
+
+[node name="Label" type="Label" parent="Ability Slots/AbilitySlot4"]
+layout_mode = 0
+offset_left = 5.0
+offset_right = 15.0
+offset_bottom = 23.0
+scale = Vector2(0.75, 0.75)
+text = "4"
+
+[node name="Ability Sprite" type="Sprite2D" parent="Ability Slots/AbilitySlot4"]
+z_index = -2
+position = Vector2(16, 16)
+texture = SubResource("AtlasTexture_jbpjp")
+
+[node name="CooldownRect" type="TextureRect" parent="Ability Slots/AbilitySlot4"]
+modulate = Color(0, 0, 0, 0)
+z_index = -1
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 54.0
+offset_bottom = 56.0
+scale = Vector2(0.5, 0.5)
+texture = SubResource("CanvasTexture_jbpjp")
+
+[node name="AbilitySlot3" type="TextureRect" parent="Ability Slots"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 530.0
+offset_top = 580.0
+offset_right = 562.0
+offset_bottom = 612.0
+scale = Vector2(2, 2)
+texture = ExtResource("4_jbpjp")
+
+[node name="Label" type="Label" parent="Ability Slots/AbilitySlot3"]
+layout_mode = 0
+offset_left = 5.0
+offset_right = 15.0
+offset_bottom = 23.0
+scale = Vector2(0.75, 0.75)
+text = "3"
+
+[node name="Ability Sprite" type="Sprite2D" parent="Ability Slots/AbilitySlot3"]
+z_index = -1
+position = Vector2(16, 16)
+texture = SubResource("AtlasTexture_uflt7")
+
+[node name="CooldownRect" type="TextureRect" parent="Ability Slots/AbilitySlot3"]
+modulate = Color(0, 0, 0, 0)
+z_index = -1
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 54.0
+offset_bottom = 56.0
+scale = Vector2(0.5, 0.5)
+texture = SubResource("CanvasTexture_jbpjp")
+
+[node name="AbilitySlot2" type="TextureRect" parent="Ability Slots"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 460.0
+offset_top = 580.0
+offset_right = 492.0
+offset_bottom = 612.0
+scale = Vector2(2, 2)
+texture = ExtResource("4_jbpjp")
+
+[node name="Slot2Highlight" type="TextureRect" parent="Ability Slots/AbilitySlot2"]
+visible = false
+layout_mode = 0
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 36.0
+offset_bottom = 36.0
+texture = ExtResource("6_jbpjp")
+
+[node name="Label" type="Label" parent="Ability Slots/AbilitySlot2"]
+layout_mode = 0
+offset_left = 5.0
+offset_right = 15.0
+offset_bottom = 23.0
+scale = Vector2(0.75, 0.75)
+text = "2"
+
+[node name="Ability Sprite" type="Sprite2D" parent="Ability Slots/AbilitySlot2"]
+z_index = -1
+position = Vector2(16, 16)
+texture = SubResource("AtlasTexture_6jssq")
+
+[node name="CooldownRect" type="TextureRect" parent="Ability Slots/AbilitySlot2"]
+modulate = Color(0, 0, 0, 0)
+z_index = -1
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 54.0
+offset_bottom = 56.0
+scale = Vector2(0.5, 0.5)
+texture = SubResource("CanvasTexture_jbpjp")
+
+[node name="AbilitySlot1" type="TextureRect" parent="Ability Slots"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 390.0
+offset_top = 580.0
+offset_right = 422.0
+offset_bottom = 612.0
+scale = Vector2(2, 2)
+texture = ExtResource("4_jbpjp")
+
+[node name="Slot1Highlight" type="TextureRect" parent="Ability Slots/AbilitySlot1"]
+layout_mode = 0
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 36.0
+offset_bottom = 36.0
+texture = ExtResource("6_jbpjp")
+
+[node name="Label" type="Label" parent="Ability Slots/AbilitySlot1"]
+layout_mode = 0
+offset_left = 5.0
+offset_right = 15.0
+offset_bottom = 23.0
+scale = Vector2(0.75, 0.75)
+text = "1"
+
+[node name="Ability Sprite" type="Sprite2D" parent="Ability Slots/AbilitySlot1"]
+z_index = -1
+position = Vector2(16, 16)
+texture = SubResource("AtlasTexture_3nrpj")
+
+[node name="CooldownRect" type="TextureRect" parent="Ability Slots/AbilitySlot1"]
+modulate = Color(0, 0, 0, 0)
+z_index = -1
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 54.0
+offset_bottom = 56.0
+scale = Vector2(0.5, 0.5)
+texture = SubResource("CanvasTexture_jbpjp")

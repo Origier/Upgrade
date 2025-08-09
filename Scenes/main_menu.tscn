@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://baau7ms4q4et0"]
+
+[ext_resource type="PackedScene" uid="uid://bwi4xg5fky43j" path="res://Scenes/client_server_ui.tscn" id="1_28flt"]
+
+[node name="MainMenu" type="Node2D"]
+
+[node name="ClientServerUI" parent="." instance=ExtResource("1_28flt")]
+offset_left = 588.0
+offset_top = 290.0
+offset_right = 588.0
+offset_bottom = 290.0

@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://cmof74et5hpf6"]
+
+[ext_resource type="Script" uid="uid://cr1lx5m1gt50m" path="res://Scripts/turret_bullet_basic.gd" id="1_mp5uh"]
+[ext_resource type="Texture2D" uid="uid://tg832iosvpg" path="res://Assets/Sprites/Turret Bullet Basic.png" id="2_mp5uh"]
+
+[node name="TurretBulletBasic" type="Area2D"]
+z_index = -1
+script = ExtResource("1_mp5uh")
+
+[node name="Bullet Texture" type="Sprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(1.25, 1.25)
+texture = ExtResource("2_mp5uh")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-6, 8, 6, 8, 6, -6, 3, -8, -3, -8, -6, -5)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

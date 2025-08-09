@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://cjic4hbvx46dc"]
+
+[ext_resource type="Script" uid="uid://cr1lx5m1gt50m" path="res://Scripts/turret_bullet_basic.gd" id="1_b35si"]
+[ext_resource type="Texture2D" uid="uid://bb06tiywhfqyg" path="res://Assets/Sprites/Turret Rocket Basic.png" id="1_e6cah"]
+
+[node name="TurretRocketBasic" type="Area2D"]
+script = ExtResource("1_b35si")
+speed = 500.0
+damage = 50
+
+[node name="RocketSprite" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-3.55271e-15, 0)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("1_e6cah")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(7, -14, 7, 7, 3, 8, 3, 12, 6, 13, 6, 19, -4, 19, -4, 13, -1, 12, -1, 8, -4, 7, -4, -14, 1, -19)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
