@@ -69,19 +69,19 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if player_cannon.on_cooldown:
 		var percent: float = $Ability1Timer.time_left / $Ability1Timer.wait_time
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"ability": Ability.ABILITY_TYPE.CANNON, "percent": percent})
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON, "percent": percent})
 		
 	if player_rocket.on_cooldown:
 		var percent: float = $Ability2Timer.time_left / $Ability2Timer.wait_time
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"ability": Ability.ABILITY_TYPE.ROCKET, "percent": percent})
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.ROCKET, "percent": percent})
 		
 	if player_shield.on_cooldown:
 		var percent: float = $Ability3Timer.time_left / $Ability3Timer.wait_time
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"ability": Ability.ABILITY_TYPE.SHIELD, "percent": percent})
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.SHIELD, "percent": percent})
 		
 	if player_speed.on_cooldown:
 		var percent: float = $Ability4Timer.time_left / $Ability4Timer.wait_time
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"ability": Ability.ABILITY_TYPE.SPEED, "percent": percent})
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.SPEED, "percent": percent})
 
 
 func _physics_process(delta: float) -> void:
@@ -145,34 +145,36 @@ func on_player_sync(id: int, position: Vector2, rotation: float, cannon_rotation
 	$PlayerBody.global_rotation = rotation
 	$PlayerBody/PlayerTankGun.global_rotation = cannon_rotation
 
+
 # Fires a bullet out of this player character if they are responsible for shooting the bullet
 func on_player_shoot(id: int) -> void:
 	if id != owner_id: return
 	spawn_bullet()
 
+
 func on_player_hotkey(id: int, hotkey: int) -> void:
 	if id != owner_id: return
-	
 	match hotkey:
 		PLAYER_HOTKEYS.HOTKEY_1:
 			player_activated_cannon = player_cannon
-			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"ability": Ability.ABILITY_TYPE.CANNON, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
+			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
 		PLAYER_HOTKEYS.HOTKEY_2:
 			player_activated_cannon = player_rocket
-			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY,  {"ability": Ability.ABILITY_TYPE.ROCKET, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
+			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY,  {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.ROCKET, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
 		PLAYER_HOTKEYS.HOTKEY_3:
 			if player_shield.on_cooldown: return
-			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"ability": Ability.ABILITY_TYPE.SHIELD, "started": true, "cooldown_completed": false, "hotkey_pressed": true})
+			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.SHIELD, "started": true, "cooldown_completed": false, "hotkey_pressed": true})
 			player_shield.on_cooldown = true
 			$Ability3Timer.start()
 			activate_shield()
 		PLAYER_HOTKEYS.HOTKEY_4:
 			if player_speed.on_cooldown: return
-			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"ability": Ability.ABILITY_TYPE.SPEED, "started": true, "cooldown_completed": false, "hotkey_pressed": true})
+			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.SPEED, "started": true, "cooldown_completed": false, "hotkey_pressed": true})
 			player_speed.on_cooldown = true
 			$Ability4Timer.start()
 			activate_speed()
 	
+
 # Activates the players shield temporarily, allowing them to reflect bullets back at their enemy
 func activate_shield() -> void:
 	var shield = shield_scene.instantiate()
@@ -180,23 +182,25 @@ func activate_shield() -> void:
 	shield.owner_id = owner_id
 	add_child(shield)
 
+
 # Activates the players speed boost, allowing them to move faster during the duration of the timer
 func activate_speed() -> void:
 	current_speed += player_speed.potency
 	$PlayerSpeedBoostTimer.start()
 	
+
 func spawn_bullet():
 	var bullet
 	# Create the bullet based on which bullet the player has chosen
 	if player_activated_cannon == player_cannon:
 		if player_cannon.on_cooldown: return
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"ability": Ability.ABILITY_TYPE.CANNON, "started": true, "cooldown_completed": false, "hotkey_pressed": false})
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON, "started": true, "cooldown_completed": false, "hotkey_pressed": false})
 		player_cannon.on_cooldown = true
 		$Ability1Timer.start()
 		bullet = bullet_scene.instantiate()
 	else:
 		if player_rocket.on_cooldown: return
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"ability": Ability.ABILITY_TYPE.ROCKET, "started": true, "cooldown_completed": false, "hotkey_pressed": false})
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.ROCKET, "started": true, "cooldown_completed": false, "hotkey_pressed": false})
 		player_rocket.on_cooldown = true
 		$Ability2Timer.start()
 		bullet = rocket_scene.instantiate()
@@ -209,12 +213,14 @@ func spawn_bullet():
 	bullet.owner_id = owner_id
 	get_tree().get_root().add_child(bullet)
 
+
 func take_damage(damage: int) -> void:
 	player_health -= damage
 	on_damage_recieved.emit(damage)
 	if (player_health <= 0):
 		queue_free()
 	
+
 func _on_collision_timer_timeout() -> void:
 	$PlayerBodyCollider.disabled = false
 	
@@ -226,16 +232,16 @@ func _on_player_speed_boost_timer_timeout() -> void:
 
 func _on_ability_4_timer_timeout() -> void:
 	player_speed.on_cooldown = false
-	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"ability": Ability.ABILITY_TYPE.SPEED, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
+	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.SPEED, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
 
 func _on_ability_3_timer_timeout() -> void:
 	player_shield.on_cooldown = false
-	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"ability": Ability.ABILITY_TYPE.SHIELD, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
+	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.SHIELD, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
 
 func _on_ability_2_timer_timeout() -> void:
 	player_rocket.on_cooldown = false
-	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"ability": Ability.ABILITY_TYPE.ROCKET, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
+	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.ROCKET, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
 
 func _on_ability_1_timer_timeout() -> void:
 	player_cannon.on_cooldown = false
-	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"ability": Ability.ABILITY_TYPE.CANNON, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
+	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON, "started": false, "cooldown_completed": true, "hotkey_pressed": false})

@@ -19,6 +19,9 @@ func on_signal_recieved(channel: SignalGlobals.CHANNEL, arguments: Dictionary) -
 		
 		# Switches the UI selection effect or starts the cooldown effect
 		SignalGlobals.CHANNEL.PLAYER_ABILITY:
+			var owner_id: int = arguments["owner_id"]
+			if owner_id != ClientGlobals.id: return
+			
 			var ability: int = arguments["ability"]
 			var started: bool = arguments["started"]
 			var cooldown_completed: bool = arguments["cooldown_completed"]
@@ -72,6 +75,9 @@ func on_signal_recieved(channel: SignalGlobals.CHANNEL, arguments: Dictionary) -
 					
 		# Updates the current cooldown UI effect each frame
 		SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT:
+			var owner_id: int = arguments["owner_id"]
+			if owner_id != ClientGlobals.id: return
+			
 			var ability: int = arguments["ability"]
 			var percent_cooldown: float = arguments["percent"]
 			match ability:
