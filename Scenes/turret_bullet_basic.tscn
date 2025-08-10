@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cmof74et5hpf6"]
 
-[ext_resource type="Script" uid="uid://cr1lx5m1gt50m" path="res://Scripts/turret_bullet_basic.gd" id="1_mp5uh"]
+[ext_resource type="Script" uid="uid://cr1lx5m1gt50m" path="res://Scripts/Player/turret_bullet_basic.gd" id="1_mp5uh"]
 [ext_resource type="Texture2D" uid="uid://tg832iosvpg" path="res://Assets/Sprites/Turret Bullet Basic.png" id="2_mp5uh"]
 
 [node name="TurretBulletBasic" type="Area2D"]

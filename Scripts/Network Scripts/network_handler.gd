@@ -1,7 +1,7 @@
 extends Node
 
 # IP Address of the server to connect to - likely needs adjustments when porting the game
-const IP_ADDRESS: String = "192.168.1.122"
+const IP_ADDRESS: String = "192.168.1.123"
 # Port for connections to target
 const PORT: int = 42000
 # Total number of players that can join a session

@@ -1,11 +1,11 @@
 [gd_scene load_steps=11 format=4 uid="uid://yb38nwveobjb"]
 
 [ext_resource type="PackedScene" uid="uid://cuowrv765tyvt" path="res://Scenes/player_spawner.tscn" id="1_iqxwh"]
-[ext_resource type="PackedScene" uid="uid://cs1gdvdlh7iug" path="res://Scenes/player_ui.tscn" id="1_ybkce"]
+[ext_resource type="PackedScene" uid="uid://cs1gdvdlh7iug" path="res://Scenes/UI Scenes/player_ui.tscn" id="1_ybkce"]
 [ext_resource type="PackedScene" uid="uid://0e4k0hynpv12" path="res://Scenes/player.tscn" id="2_bu8q7"]
 [ext_resource type="Texture2D" uid="uid://dhslnxvo7umlj" path="res://Assets/Sprites/Floor Tile Sprite 1.png" id="3_kgtob"]
 [ext_resource type="Texture2D" uid="uid://dvef4rn0sulkm" path="res://Assets/Sprites/Wall Tile SpriteSheet.png" id="3_smosg"]
-[ext_resource type="Script" uid="uid://dse2lds6x3vyd" path="res://Scripts/player_camera.gd" id="4_lyp6d"]
+[ext_resource type="Script" uid="uid://dse2lds6x3vyd" path="res://Scripts/Player/player_camera.gd" id="4_lyp6d"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ybkce"]
 resource_name = "Wall Tile Set"

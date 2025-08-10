@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://0e4k0hynpv12"]
 
-[ext_resource type="Script" uid="uid://c55dsoxb267wf" path="res://Scripts/player_controls.gd" id="1_cvnsp"]
+[ext_resource type="Script" uid="uid://c55dsoxb267wf" path="res://Scripts/Player/player_controls.gd" id="1_cvnsp"]
 [ext_resource type="PackedScene" uid="uid://cjic4hbvx46dc" path="res://Scenes/turret_rocket_basic.tscn" id="3_8erm5"]
 [ext_resource type="Texture2D" uid="uid://d6lnr2w43hmd" path="res://Assets/Sprites/Tank 1 Turret Sprite.png" id="3_vgqql"]
 [ext_resource type="PackedScene" uid="uid://bcw1t2dvvgocc" path="res://Scenes/shield.tscn" id="4_f1ek2"]
@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cmof74et5hpf6" path="res://Scenes/turret_bullet_basic.tscn" id="4_vgqql"]
 [ext_resource type="Texture2D" uid="uid://bhf8m2q3nh5dy" path="res://Assets/Sprites/Life Bar.png" id="5_3smsa"]
 [ext_resource type="Texture2D" uid="uid://bgfr5rimp424u" path="res://Assets/Sprites/Life Bar - Progress.png" id="5_fkybt"]
-[ext_resource type="Script" uid="uid://t1resnqkfjmj" path="res://Scripts/health_bar.gd" id="6_x3wgy"]
+[ext_resource type="Script" uid="uid://t1resnqkfjmj" path="res://Scripts/UI Scripts/health_bar.gd" id="6_x3wgy"]
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_cvnsp")

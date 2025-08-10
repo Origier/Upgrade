@@ -13,12 +13,11 @@ var player_health: int = 100
 
 enum PLAYER_HOTKEYS {
 	DEFAULT = -1,
-	HOTKEY_1 = 1,
-	HOTKEY_2 = 2,
-	HOTKEY_3 = 3,
-	HOTKEY_4 = 4,
-	MOVE_FORWARD = 5,
-	ROTATE = 6
+	HOTKEY_WEAPON_TOGGLE = 1,
+	HOTKEY_SHIELD = 2,
+	HOTKEY_SPEED = 3,
+	MOVE_FORWARD = 4,
+	ROTATE = 5
 }
 
 # Flags and variables for determining movement occuring on the player
@@ -137,19 +136,21 @@ func on_player_shoot(id: int) -> void:
 func on_player_hotkey(id: int, hotkey: int) -> void:
 	if id != owner_id: return
 	match hotkey:
-		PLAYER_HOTKEYS.HOTKEY_1:
-			player_activated_cannon = player_cannon
-			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
-		PLAYER_HOTKEYS.HOTKEY_2:
-			player_activated_cannon = player_rocket
-			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY,  {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.ROCKET, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
-		PLAYER_HOTKEYS.HOTKEY_3:
+		# Toggles the active weapon on the cannon
+		PLAYER_HOTKEYS.HOTKEY_WEAPON_TOGGLE:
+			if player_activated_cannon == player_rocket:
+				player_activated_cannon = player_cannon
+				SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
+			elif player_activated_cannon == player_cannon:
+				player_activated_cannon = player_rocket
+				SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY,  {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.ROCKET, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
+		PLAYER_HOTKEYS.HOTKEY_SHIELD:
 			if player_shield.on_cooldown: return
 			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.SHIELD, "started": true, "cooldown_completed": false, "hotkey_pressed": true})
 			player_shield.on_cooldown = true
 			$Ability3Timer.start()
 			activate_shield()
-		PLAYER_HOTKEYS.HOTKEY_4:
+		PLAYER_HOTKEYS.HOTKEY_SPEED:
 			if player_speed.on_cooldown: return
 			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.SPEED, "started": true, "cooldown_completed": false, "hotkey_pressed": true})
 			player_speed.on_cooldown = true
@@ -222,14 +223,12 @@ func update_mouse_input() -> void:
 # Checking for hotbar button presses and sending them to the server for validation
 func update_hotkey_input() -> void:
 	var hotkey: PLAYER_HOTKEYS = PLAYER_HOTKEYS.DEFAULT
-	if Input.is_action_just_pressed("Hotkey1"):
-		hotkey = PLAYER_HOTKEYS.HOTKEY_1
-	elif Input.is_action_just_pressed("Hotkey2"):
-		hotkey = PLAYER_HOTKEYS.HOTKEY_2
-	elif Input.is_action_just_pressed("Hotkey3"):
-		hotkey = PLAYER_HOTKEYS.HOTKEY_3
-	elif Input.is_action_just_pressed("Hotkey4"):
-		hotkey = PLAYER_HOTKEYS.HOTKEY_4
+	if Input.is_action_just_pressed("Hotkey_Weapon_Toggle"):
+		hotkey = PLAYER_HOTKEYS.HOTKEY_WEAPON_TOGGLE
+	elif Input.is_action_just_pressed("Hotkey_Shield"):
+		hotkey = PLAYER_HOTKEYS.HOTKEY_SHIELD
+	elif Input.is_action_just_pressed("Hotkey_Speed"):
+		hotkey = PLAYER_HOTKEYS.HOTKEY_SPEED
 	
 	if hotkey != PLAYER_HOTKEYS.DEFAULT:
 		PlayerHotkey.create(owner_id, hotkey).send(NetworkHandler.server_peer)

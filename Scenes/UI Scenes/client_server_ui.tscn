@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bwi4xg5fky43j"]
 
-[ext_resource type="Script" uid="uid://dirvcnqsey4hy" path="res://Scripts/client_server_ui.gd" id="1_sx5is"]
+[ext_resource type="Script" uid="uid://dirvcnqsey4hy" path="res://Scripts/UI Scripts/client_server_ui.gd" id="1_sx5is"]
 
 [node name="ClientServerUI" type="Control"]
 layout_mode = 3
@@ -30,5 +30,10 @@ text = "Create Server"
 layout_mode = 2
 text = "Create Client"
 
+[node name="OptionsButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Options"
+
 [connection signal="pressed" from="VBoxContainer/ServerButton" to="." method="_on_server_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ClientButton" to="." method="_on_client_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/OptionsButton" to="." method="_on_client_button_pressed"]
