@@ -83,6 +83,7 @@ func _process(_delta: float) -> void:
 		var percent: float = $Ability4Timer.time_left / $Ability4Timer.wait_time
 		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"ability": Ability.ABILITY_TYPE.SPEED, "percent": percent})
 
+
 func _physics_process(delta: float) -> void:
 	if ClientGlobals.id != owner_id: return
 	
@@ -136,7 +137,10 @@ func on_player_take_damage(id: int, damage: int) -> void:
 
 # Updates this players position based on server packets syncing the position
 func on_player_sync(id: int, position: Vector2, rotation: float, cannon_rotation: float) -> void:
+	# Verify that this is the player that is supposed to move
 	if owner_id != id: return
+	# Verify that this player is not updating based on server broadcasts about its own location
+	if ClientGlobals.id == id: return
 	global_position = position
 	$PlayerBody.global_rotation = rotation
 	$PlayerBody/PlayerTankGun.global_rotation = cannon_rotation
