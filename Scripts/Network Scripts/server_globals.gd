@@ -5,6 +5,8 @@ extends Node
 signal on_player_sync(id: int, position: Vector2, rotation: float, cannon_rotation: float)
 signal on_player_shoot(id: int)
 signal on_player_hotkey(id: int, hotkey: int)
+signal on_player_move(id: int, hotkey: int, intensity: float)
+signal on_player_mouse(id: int, mouse_position: Vector2)
 signal spawn_player(id: int)
 
 var connected_peers: Array
@@ -44,6 +46,14 @@ func on_server_packet(client_id: int, packet: PackedByteArray) -> void:
 			var player_hotkey_packet: PlayerHotkey = PlayerHotkey.create_from_data(packet)
 			on_player_hotkey.emit(player_hotkey_packet.id, player_hotkey_packet.hotkey)
 			player_hotkey_packet.broadcast(NetworkHandler.connection)
+		
+		Packet.PACKET_TYPE.PLAYER_MOVE:
+			var player_move_packet: PlayerMove = PlayerMove.create_from_data(packet)
+			on_player_move.emit(player_move_packet.id, player_move_packet.hotkey, player_move_packet.intensity)
+		
+		Packet.PACKET_TYPE.PLAYER_MOUSE:
+			var player_mouse_packet: PlayerMouse = PlayerMouse.create_from_data(packet)
+			on_player_mouse.emit(player_mouse_packet.id, player_mouse_packet.mouse_position)
 		
 		_:
 			printerr("Packet of type ", packet_type, " unhandled by the server.")
