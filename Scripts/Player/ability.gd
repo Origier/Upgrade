@@ -1,10 +1,10 @@
 class_name Ability
 
 enum ABILITY_TYPE {
-	SHIELD = 1,
-	SPEED = 2,
-	CANNON = 3,
-	ROCKET = 4
+	DEFENSE = 1,
+	UTILITY = 2,
+	CANNON_PRIMARY = 3,
+	CANNON_SECONDARY = 4
 }
 
 # Time in seconds to cooldown

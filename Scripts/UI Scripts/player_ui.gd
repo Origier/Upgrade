@@ -28,7 +28,7 @@ func on_signal_recieved(channel: SignalGlobals.CHANNEL, arguments: Dictionary) -
 			var hotkey_pressed: bool = arguments["hotkey_pressed"]
 			match ability:
 				# Toggles the display for which is the active cannon item
-				Ability.ABILITY_TYPE.CANNON:
+				Ability.ABILITY_TYPE.CANNON_PRIMARY:
 					# Only toggles when the player clicks the hotkey
 					if hotkey_pressed:
 						$"Ability Slots/AbilitySlot1/Slot1Highlight".visible = true
@@ -42,7 +42,7 @@ func on_signal_recieved(channel: SignalGlobals.CHANNEL, arguments: Dictionary) -
 						$"Ability Slots/AbilitySlot1/Label".visible = true
 						$"Ability Slots/AbilitySlot1/CooldownRect".modulate = Color(0, 0, 0, 0)
 					
-				Ability.ABILITY_TYPE.ROCKET:
+				Ability.ABILITY_TYPE.CANNON_SECONDARY:
 					if hotkey_pressed:
 						$"Ability Slots/AbilitySlot1/Slot1Highlight".visible = false
 						$"Ability Slots/AbilitySlot2/Slot2Highlight".visible = true
@@ -55,7 +55,7 @@ func on_signal_recieved(channel: SignalGlobals.CHANNEL, arguments: Dictionary) -
 						$"Ability Slots/AbilitySlot2/Label".visible = true
 						$"Ability Slots/AbilitySlot2/CooldownRect".modulate = Color(0, 0, 0, 0)
 					
-				Ability.ABILITY_TYPE.SHIELD:
+				Ability.ABILITY_TYPE.DEFENSE:
 					if started:
 						$"Ability Slots/AbilitySlot3/Label".visible = false
 						$"Ability Slots/AbilitySlot3/CooldownRect".modulate = Color(0, 0, 0, 1)
@@ -64,7 +64,7 @@ func on_signal_recieved(channel: SignalGlobals.CHANNEL, arguments: Dictionary) -
 						$"Ability Slots/AbilitySlot3/Label".visible = true
 						$"Ability Slots/AbilitySlot3/CooldownRect".modulate = Color(0, 0, 0, 0)
 					
-				Ability.ABILITY_TYPE.SPEED:
+				Ability.ABILITY_TYPE.UTILITY:
 					if started:
 						$"Ability Slots/AbilitySlot4/Label".visible = false
 						$"Ability Slots/AbilitySlot4/CooldownRect".modulate = Color(0, 0, 0, 1)
@@ -81,13 +81,13 @@ func on_signal_recieved(channel: SignalGlobals.CHANNEL, arguments: Dictionary) -
 			var ability: int = arguments["ability"]
 			var percent_cooldown: float = arguments["percent"]
 			match ability:
-				Ability.ABILITY_TYPE.CANNON:
+				Ability.ABILITY_TYPE.CANNON_PRIMARY:
 					$"Ability Slots/AbilitySlot1/CooldownRect".modulate = Color(0, 0, 0, percent_cooldown)
-				Ability.ABILITY_TYPE.ROCKET:
+				Ability.ABILITY_TYPE.CANNON_SECONDARY:
 					$"Ability Slots/AbilitySlot2/CooldownRect".modulate = Color(0, 0, 0, percent_cooldown)
-				Ability.ABILITY_TYPE.SHIELD:
+				Ability.ABILITY_TYPE.DEFENSE:
 					$"Ability Slots/AbilitySlot3/CooldownRect".modulate = Color(0, 0, 0, percent_cooldown)
-				Ability.ABILITY_TYPE.SPEED:
+				Ability.ABILITY_TYPE.UTILITY:
 					$"Ability Slots/AbilitySlot4/CooldownRect".modulate = Color(0, 0, 0, percent_cooldown)
 					
 # Update the health bar when the damage is recieved

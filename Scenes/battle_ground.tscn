@@ -80,6 +80,7 @@ position = Vector2(1822, -480)
 [node name="CanvasLayerUI" type="CanvasLayer" parent="."]
 
 [node name="PlayerUI" parent="CanvasLayerUI" instance=ExtResource("1_ybkce")]
+visible = false
 z_index = 200
 metadata/_edit_use_anchors_ = true
 

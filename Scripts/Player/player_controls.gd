@@ -14,8 +14,8 @@ var player_health: int = 100
 enum PLAYER_HOTKEYS {
 	DEFAULT = -1,
 	HOTKEY_WEAPON_TOGGLE = 1,
-	HOTKEY_SHIELD = 2,
-	HOTKEY_SPEED = 3,
+	HOTKEY_DEFENSE = 2,
+	HOTKEY_UTILITY = 3,
 	MOVE_FORWARD = 4,
 	ROTATE = 5
 }
@@ -28,10 +28,10 @@ var move_intensity: float = 0.0
 var next_cannon_rotation: float = 0.0
 
 # Construct basic player abilities
-var player_cannon: Ability = Ability.create(0.5, 10, Ability.ABILITY_TYPE.CANNON)
-var player_rocket: Ability = Ability.create(5, 50, Ability.ABILITY_TYPE.ROCKET)
-var player_shield: Ability = Ability.create(10, 3, Ability.ABILITY_TYPE.SHIELD)
-var player_speed: Ability = Ability.create(7, 300, Ability.ABILITY_TYPE.SPEED)
+var player_cannon: Ability = Ability.create(0.5, 10, Ability.ABILITY_TYPE.CANNON_PRIMARY)
+var player_rocket: Ability = Ability.create(5, 50, Ability.ABILITY_TYPE.CANNON_SECONDARY)
+var player_shield: Ability = Ability.create(10, 3, Ability.ABILITY_TYPE.DEFENSE)
+var player_speed: Ability = Ability.create(7, 300, Ability.ABILITY_TYPE.UTILITY)
 
 # Play style test - ability 1 & 2 are togglable, upon toggling it switches what is shot out of the cannon when the player left clicks
 # Abilities 3 & 4 are instant activated and will be always accessible when not on cooldown
@@ -140,19 +140,19 @@ func on_player_hotkey(id: int, hotkey: int) -> void:
 		PLAYER_HOTKEYS.HOTKEY_WEAPON_TOGGLE:
 			if player_activated_cannon == player_rocket:
 				player_activated_cannon = player_cannon
-				SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
+				SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_PRIMARY, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
 			elif player_activated_cannon == player_cannon:
 				player_activated_cannon = player_rocket
-				SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY,  {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.ROCKET, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
-		PLAYER_HOTKEYS.HOTKEY_SHIELD:
+				SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY,  {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_SECONDARY, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
+		PLAYER_HOTKEYS.HOTKEY_DEFENSE:
 			if player_shield.on_cooldown: return
-			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.SHIELD, "started": true, "cooldown_completed": false, "hotkey_pressed": true})
+			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.DEFENSE, "started": true, "cooldown_completed": false, "hotkey_pressed": true})
 			player_shield.on_cooldown = true
 			$Ability3Timer.start()
 			activate_shield()
-		PLAYER_HOTKEYS.HOTKEY_SPEED:
+		PLAYER_HOTKEYS.HOTKEY_UTILITY:
 			if player_speed.on_cooldown: return
-			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.SPEED, "started": true, "cooldown_completed": false, "hotkey_pressed": true})
+			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.UTILITY, "started": true, "cooldown_completed": false, "hotkey_pressed": true})
 			player_speed.on_cooldown = true
 			$Ability4Timer.start()
 			activate_speed()
@@ -184,19 +184,19 @@ func on_player_mouse(id: int, mouse_position: Vector2) -> void:
 func update_cooldowns() -> void:
 	if player_cannon.on_cooldown:
 		var percent: float = $Ability1Timer.time_left / $Ability1Timer.wait_time
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON, "percent": percent})
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_PRIMARY, "percent": percent})
 		
 	if player_rocket.on_cooldown:
 		var percent: float = $Ability2Timer.time_left / $Ability2Timer.wait_time
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.ROCKET, "percent": percent})
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_SECONDARY, "percent": percent})
 		
 	if player_shield.on_cooldown:
 		var percent: float = $Ability3Timer.time_left / $Ability3Timer.wait_time
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.SHIELD, "percent": percent})
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.DEFENSE, "percent": percent})
 		
 	if player_speed.on_cooldown:
 		var percent: float = $Ability4Timer.time_left / $Ability4Timer.wait_time
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.SPEED, "percent": percent})
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.UTILITY, "percent": percent})
 
 
 # Tracks input for movement actions, sends those inputs to the server for validation
@@ -226,9 +226,9 @@ func update_hotkey_input() -> void:
 	if Input.is_action_just_pressed(ClientConfig.WEAPON_TOGGLE_ACTION):
 		hotkey = PLAYER_HOTKEYS.HOTKEY_WEAPON_TOGGLE
 	elif Input.is_action_just_pressed(ClientConfig.SHIELD_ACTION):
-		hotkey = PLAYER_HOTKEYS.HOTKEY_SHIELD
+		hotkey = PLAYER_HOTKEYS.HOTKEY_DEFENSE
 	elif Input.is_action_just_pressed(ClientConfig.SPEED_ACTION):
-		hotkey = PLAYER_HOTKEYS.HOTKEY_SPEED
+		hotkey = PLAYER_HOTKEYS.HOTKEY_UTILITY
 	
 	if hotkey != PLAYER_HOTKEYS.DEFAULT:
 		PlayerHotkey.create(owner_id, hotkey).send(NetworkHandler.server_peer)
@@ -253,13 +253,13 @@ func spawn_bullet():
 	# Create the bullet based on which bullet the player has chosen
 	if player_activated_cannon == player_cannon:
 		if player_cannon.on_cooldown: return
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON, "started": true, "cooldown_completed": false, "hotkey_pressed": false})
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_PRIMARY, "started": true, "cooldown_completed": false, "hotkey_pressed": false})
 		player_cannon.on_cooldown = true
 		$Ability1Timer.start()
 		bullet = bullet_scene.instantiate()
 	else:
 		if player_rocket.on_cooldown: return
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.ROCKET, "started": true, "cooldown_completed": false, "hotkey_pressed": false})
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_SECONDARY, "started": true, "cooldown_completed": false, "hotkey_pressed": false})
 		player_rocket.on_cooldown = true
 		$Ability2Timer.start()
 		bullet = rocket_scene.instantiate()
@@ -291,16 +291,16 @@ func _on_player_speed_boost_timer_timeout() -> void:
 
 func _on_ability_4_timer_timeout() -> void:
 	player_speed.on_cooldown = false
-	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.SPEED, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
+	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.UTILITY, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
 
 func _on_ability_3_timer_timeout() -> void:
 	player_shield.on_cooldown = false
-	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.SHIELD, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
+	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.DEFENSE, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
 
 func _on_ability_2_timer_timeout() -> void:
 	player_rocket.on_cooldown = false
-	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.ROCKET, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
+	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_SECONDARY, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
 
 func _on_ability_1_timer_timeout() -> void:
 	player_cannon.on_cooldown = false
-	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
+	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_PRIMARY, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
