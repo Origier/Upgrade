@@ -77,13 +77,11 @@ position = Vector2(33, 352)
 [node name="Player2Spawn" type="Node2D" parent="."]
 position = Vector2(1822, -480)
 
+[node name="CanvasLayerUI" type="CanvasLayer" parent="."]
+
+[node name="PlayerUI" parent="CanvasLayerUI" instance=ExtResource("1_ybkce")]
+z_index = 200
+metadata/_edit_use_anchors_ = true
+
 [node name="PlayerCamera" type="Camera2D" parent="."]
 script = ExtResource("4_lyp6d")
-
-[node name="PlayerUI" parent="PlayerCamera" instance=ExtResource("1_ybkce")]
-visible = false
-z_index = 200
-offset_left = -576.0
-offset_top = -324.0
-offset_right = -576.0
-offset_bottom = -324.0

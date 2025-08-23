@@ -4,8 +4,6 @@
 
 [node name="MainMenu" type="Node2D"]
 
-[node name="ClientServerUI" parent="." instance=ExtResource("1_28flt")]
-offset_left = 588.0
-offset_top = 290.0
-offset_right = 588.0
-offset_bottom = 290.0
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ClientServerUI" parent="CanvasLayer" instance=ExtResource("1_28flt")]

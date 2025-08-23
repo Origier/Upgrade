@@ -6,8 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://bcw1t2dvvgocc" path="res://Scenes/shield.tscn" id="4_f1ek2"]
 [ext_resource type="Texture2D" uid="uid://cj33umk3kxrut" path="res://Assets/Sprites/Tank Sprite 1.png" id="4_fkybt"]
 [ext_resource type="PackedScene" uid="uid://cmof74et5hpf6" path="res://Scenes/turret_bullet_basic.tscn" id="4_vgqql"]
-[ext_resource type="Texture2D" uid="uid://bhf8m2q3nh5dy" path="res://Assets/Sprites/Life Bar.png" id="5_3smsa"]
-[ext_resource type="Texture2D" uid="uid://bgfr5rimp424u" path="res://Assets/Sprites/Life Bar - Progress.png" id="5_fkybt"]
+[ext_resource type="Texture2D" uid="uid://bhf8m2q3nh5dy" path="res://Assets/Sprites/UI Sprites/Life Bar.png" id="5_3smsa"]
+[ext_resource type="Texture2D" uid="uid://bgfr5rimp424u" path="res://Assets/Sprites/UI Sprites/Life Bar - Progress.png" id="5_fkybt"]
 [ext_resource type="Script" uid="uid://t1resnqkfjmj" path="res://Scripts/UI Scripts/health_bar.gd" id="6_x3wgy"]
 
 [node name="Player" type="CharacterBody2D"]

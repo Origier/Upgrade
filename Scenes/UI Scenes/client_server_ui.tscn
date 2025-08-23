@@ -36,4 +36,4 @@ text = "Options"
 
 [connection signal="pressed" from="VBoxContainer/ServerButton" to="." method="_on_server_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ClientButton" to="." method="_on_client_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/OptionsButton" to="." method="_on_client_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://yg5of5vxk4xi"
-path="res://.godot/imported/UI Slots.png-b67ce76c63dc642dc4c5cd3191495249.ctex"
+uid="uid://d7ke5dcnbyg4"
+path="res://.godot/imported/Options UI Button - Move Backward.png-0f92a99d95ee7dbf59be079e545e263a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/UI Slots.png"
-dest_files=["res://.godot/imported/UI Slots.png-b67ce76c63dc642dc4c5cd3191495249.ctex"]
+source_file="res://Assets/Sprites/UI Sprites/Options UI Button - Move Backward.png"
+dest_files=["res://.godot/imported/Options UI Button - Move Backward.png-0f92a99d95ee7dbf59be079e545e263a.ctex"]
 
 [params]
 

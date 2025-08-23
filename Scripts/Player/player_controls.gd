@@ -202,8 +202,8 @@ func update_cooldowns() -> void:
 # Tracks input for movement actions, sends those inputs to the server for validation
 # The server will perform the movement on its version of the entity and then send a sync packet to update
 func update_movement_input() -> void:
-	var forward_magnitude: float = Input.get_axis("ui_down", "ui_up")
-	var rotation_magnitude: float = Input.get_axis("ui_left", "ui_right")
+	var forward_magnitude: float = Input.get_axis("move_backward", "move_forward")
+	var rotation_magnitude: float = Input.get_axis("rotate_left", "rotate_right")
 	# Either rotate or move vertically - either movement will prevent the other from happening
 	if rotation_magnitude != 0.0:
 		PlayerMove.create(owner_id, PLAYER_HOTKEYS.ROTATE, rotation_magnitude).send(NetworkHandler.server_peer)
@@ -223,11 +223,11 @@ func update_mouse_input() -> void:
 # Checking for hotbar button presses and sending them to the server for validation
 func update_hotkey_input() -> void:
 	var hotkey: PLAYER_HOTKEYS = PLAYER_HOTKEYS.DEFAULT
-	if Input.is_action_just_pressed("Hotkey_Weapon_Toggle"):
+	if Input.is_action_just_pressed(ClientConfig.WEAPON_TOGGLE_ACTION):
 		hotkey = PLAYER_HOTKEYS.HOTKEY_WEAPON_TOGGLE
-	elif Input.is_action_just_pressed("Hotkey_Shield"):
+	elif Input.is_action_just_pressed(ClientConfig.SHIELD_ACTION):
 		hotkey = PLAYER_HOTKEYS.HOTKEY_SHIELD
-	elif Input.is_action_just_pressed("Hotkey_Speed"):
+	elif Input.is_action_just_pressed(ClientConfig.SPEED_ACTION):
 		hotkey = PLAYER_HOTKEYS.HOTKEY_SPEED
 	
 	if hotkey != PLAYER_HOTKEYS.DEFAULT:

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bgfr5rimp424u"
-path="res://.godot/imported/Life Bar - Progress.png-1aff00adb44306c2364e79ff5cabc645.ctex"
+uid="uid://bnft6wro6lpcl"
+path="res://.godot/imported/Options UI Button - Rotate Left.png-4ddce8a8b4c5688d8e764e7a04c4582a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Life Bar - Progress.png"
-dest_files=["res://.godot/imported/Life Bar - Progress.png-1aff00adb44306c2364e79ff5cabc645.ctex"]
+source_file="res://Assets/Sprites/UI Sprites/Options UI Button - Rotate Left.png"
+dest_files=["res://.godot/imported/Options UI Button - Rotate Left.png-4ddce8a8b4c5688d8e764e7a04c4582a.ctex"]
 
 [params]
 

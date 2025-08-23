@@ -1,11 +1,245 @@
-[gd_scene format=3 uid="uid://c4x21u3epc5ef"]
+[gd_scene load_steps=18 format=3 uid="uid://c4x21u3epc5ef"]
+
+[ext_resource type="Texture2D" uid="uid://crpbpa0fp3nsu" path="res://Assets/Sprites/UI Sprites/Options UI Backdrop.png" id="1_vxff0"]
+[ext_resource type="Script" uid="uid://dhxshivxaf1l4" path="res://Scripts/UI Scripts/options_ui.gd" id="1_wedg1"]
+[ext_resource type="Texture2D" uid="uid://bplf5nhttri5u" path="res://Assets/Sprites/UI Sprites/Options UI Button - Weapon Toggle.png" id="2_g6g2k"]
+[ext_resource type="Texture2D" uid="uid://dxintxioyndfd" path="res://Assets/Sprites/UI Sprites/Options UI Button - Fire Cannon.png" id="3_5slqg"]
+[ext_resource type="Texture2D" uid="uid://cy0yipwaxapf5" path="res://Assets/Sprites/UI Sprites/Options UI Button - Shield.png" id="4_toeh5"]
+[ext_resource type="Texture2D" uid="uid://b7gcnymen6883" path="res://Assets/Sprites/UI Sprites/Options UI Button - Speed.png" id="5_qdlr3"]
+[ext_resource type="Texture2D" uid="uid://350xrnkpjnlc" path="res://Assets/Sprites/UI Sprites/Options UI Button - Move Forward.png" id="7_crj15"]
+[ext_resource type="Texture2D" uid="uid://d7ke5dcnbyg4" path="res://Assets/Sprites/UI Sprites/Options UI Button - Move Backward.png" id="8_sxr1t"]
+[ext_resource type="Texture2D" uid="uid://dbmwpcf378fjb" path="res://Assets/Sprites/UI Sprites/Options UI Button - Rotate Right.png" id="9_1xby8"]
+[ext_resource type="Texture2D" uid="uid://bnft6wro6lpcl" path="res://Assets/Sprites/UI Sprites/Options UI Button - Rotate Left.png" id="10_x4lem"]
+[ext_resource type="Texture2D" uid="uid://dyj6jctg7x8fu" path="res://Assets/Sprites/UI Sprites/Main Menu Button.png" id="11_crj15"]
+[ext_resource type="Texture2D" uid="uid://fxjaoyqwfy6y" path="res://Assets/Sprites/UI Sprites/Main Menu Button - Pressed.png" id="12_1xby8"]
+[ext_resource type="Texture2D" uid="uid://dobog6yxkekmj" path="res://Assets/Sprites/UI Sprites/Main Menu Button - Hover.png" id="13_x4lem"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qdlr3"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wedg1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_toeh5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4lkm4"]
 
 [node name="OptionsUI" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -1152.0
-offset_bottom = -648.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_wedg1")
+
+[node name="BackGround" type="TextureRect" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -960.0
+offset_top = -540.0
+offset_right = -720.0
+offset_bottom = -405.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(8, 8)
+texture = ExtResource("1_vxff0")
+
+[node name="MenuScrollBox" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -225.0
+offset_top = -469.0
+offset_right = -53.0
+offset_bottom = -307.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(6, 6)
+
+[node name="MenuBox" type="VBoxContainer" parent="MenuScrollBox"]
+layout_mode = 2
+
+[node name="Shoot" type="TextureRect" parent="MenuScrollBox/MenuBox"]
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("3_5slqg")
+
+[node name="ShootButton" type="Button" parent="MenuScrollBox/MenuBox/Shoot"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 2.0
+offset_right = 158.0
+offset_bottom = 14.0
+theme_override_font_sizes/font_size = 4
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qdlr3")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_wedg1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_toeh5")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4lkm4")
+text = "Space - Click to Change
+"
+
+[node name="WeaponToggleRect" type="TextureRect" parent="MenuScrollBox/MenuBox"]
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("2_g6g2k")
+
+[node name="WeaponToggleButton" type="Button" parent="MenuScrollBox/MenuBox/WeaponToggleRect"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 2.0
+offset_right = 158.0
+offset_bottom = 14.0
+theme_override_font_sizes/font_size = 4
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qdlr3")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_wedg1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_toeh5")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4lkm4")
+text = "Q - Click to Change
+"
+
+[node name="Shield" type="TextureRect" parent="MenuScrollBox/MenuBox"]
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("4_toeh5")
+
+[node name="ShieldButton" type="Button" parent="MenuScrollBox/MenuBox/Shield"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 2.0
+offset_right = 158.0
+offset_bottom = 14.0
+theme_override_font_sizes/font_size = 4
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qdlr3")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_wedg1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_toeh5")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4lkm4")
+text = "Space - Click to Change
+"
+
+[node name="Speed" type="TextureRect" parent="MenuScrollBox/MenuBox"]
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("5_qdlr3")
+
+[node name="SpeedButton" type="Button" parent="MenuScrollBox/MenuBox/Speed"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 2.0
+offset_right = 158.0
+offset_bottom = 14.0
+theme_override_font_sizes/font_size = 4
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qdlr3")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_wedg1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_toeh5")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4lkm4")
+text = "Space - Click to Change
+"
+
+[node name="MoveForward" type="TextureRect" parent="MenuScrollBox/MenuBox"]
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("7_crj15")
+
+[node name="MoveForwardButton" type="Button" parent="MenuScrollBox/MenuBox/MoveForward"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 2.0
+offset_right = 158.0
+offset_bottom = 14.0
+theme_override_font_sizes/font_size = 4
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qdlr3")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_wedg1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_toeh5")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4lkm4")
+text = "Space - Click to Change
+"
+
+[node name="MoveBackward" type="TextureRect" parent="MenuScrollBox/MenuBox"]
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("8_sxr1t")
+
+[node name="MoveBackwardButton" type="Button" parent="MenuScrollBox/MenuBox/MoveBackward"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 2.0
+offset_right = 158.0
+offset_bottom = 14.0
+theme_override_font_sizes/font_size = 4
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qdlr3")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_wedg1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_toeh5")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4lkm4")
+text = "Space - Click to Change
+"
+
+[node name="RotateRight" type="TextureRect" parent="MenuScrollBox/MenuBox"]
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("9_1xby8")
+
+[node name="RotateRightButton" type="Button" parent="MenuScrollBox/MenuBox/RotateRight"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 2.0
+offset_right = 158.0
+offset_bottom = 14.0
+theme_override_font_sizes/font_size = 4
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qdlr3")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_wedg1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_toeh5")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4lkm4")
+text = "Space - Click to Change
+"
+
+[node name="RotateLeft" type="TextureRect" parent="MenuScrollBox/MenuBox"]
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("10_x4lem")
+
+[node name="RotateLeftButton" type="Button" parent="MenuScrollBox/MenuBox/RotateLeft"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 2.0
+offset_right = 158.0
+offset_bottom = 14.0
+theme_override_font_sizes/font_size = 4
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qdlr3")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_wedg1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_toeh5")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4lkm4")
+text = "Space - Click to Change
+"
+
+[node name="InputWaitTimer" type="Timer" parent="."]
+wait_time = 0.8
+one_shot = true
+
+[node name="MainMenuButton" type="TextureButton" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -878.0
+offset_top = 354.0
+offset_right = -826.0
+offset_bottom = 370.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(7, 7)
+texture_normal = ExtResource("11_crj15")
+texture_pressed = ExtResource("12_1xby8")
+texture_hover = ExtResource("13_x4lem")
+
+[connection signal="timeout" from="InputWaitTimer" to="." method="_on_input_wait_timer_timeout"]
+[connection signal="pressed" from="MainMenuButton" to="." method="_on_button_pressed"]
