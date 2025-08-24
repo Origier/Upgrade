@@ -18,8 +18,3 @@ texture = ExtResource("1_17xpe")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_oux8c")
-
-[node name="ExsistenceTimer" type="Timer" parent="."]
-one_shot = true
-
-[connection signal="timeout" from="ExsistenceTimer" to="." method="_on_exsistence_timer_timeout"]

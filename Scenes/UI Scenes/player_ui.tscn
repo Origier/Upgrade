@@ -48,7 +48,7 @@ scale = Vector2(2, 2)
 texture_over = ExtResource("2_yk5xn")
 texture_progress = ExtResource("3_d0beh")
 
-[node name="Ability Slots" type="HBoxContainer" parent="."]
+[node name="Upgrade Slots" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
@@ -62,12 +62,12 @@ grow_horizontal = 2
 grow_vertical = 0
 scale = Vector2(2, 2)
 
-[node name="AbilitySlot1" type="TextureRect" parent="Ability Slots"]
+[node name="UpgradeSlot1" type="TextureRect" parent="Upgrade Slots"]
 texture_filter = 1
 layout_mode = 2
 texture = ExtResource("4_gcuxo")
 
-[node name="Slot1Highlight" type="TextureRect" parent="Ability Slots/AbilitySlot1"]
+[node name="Slot1Highlight" type="TextureRect" parent="Upgrade Slots/UpgradeSlot1"]
 layout_mode = 0
 offset_left = -4.0
 offset_top = -4.0
@@ -75,7 +75,7 @@ offset_right = 36.0
 offset_bottom = 36.0
 texture = ExtResource("6_jxklt")
 
-[node name="Label" type="Label" parent="Ability Slots/AbilitySlot1"]
+[node name="Label" type="Label" parent="Upgrade Slots/UpgradeSlot1"]
 modulate = Color(0, 100, 0, 1)
 layout_mode = 0
 offset_left = 5.0
@@ -84,12 +84,12 @@ offset_bottom = 23.0
 scale = Vector2(0.75, 0.75)
 text = "*"
 
-[node name="Ability Sprite" type="Sprite2D" parent="Ability Slots/AbilitySlot1"]
+[node name="Upgrade Sprite" type="Sprite2D" parent="Upgrade Slots/UpgradeSlot1"]
 z_index = -1
 position = Vector2(16, 16)
 texture = SubResource("AtlasTexture_3nrpj")
 
-[node name="CooldownRect" type="TextureRect" parent="Ability Slots/AbilitySlot1"]
+[node name="CooldownRect" type="TextureRect" parent="Upgrade Slots/UpgradeSlot1"]
 modulate = Color(0, 0, 0, 0)
 z_index = -1
 layout_mode = 0
@@ -100,12 +100,12 @@ offset_bottom = 56.0
 scale = Vector2(0.5, 0.5)
 texture = SubResource("CanvasTexture_jbpjp")
 
-[node name="AbilitySlot2" type="TextureRect" parent="Ability Slots"]
+[node name="UpgradeSlot2" type="TextureRect" parent="Upgrade Slots"]
 texture_filter = 1
 layout_mode = 2
 texture = ExtResource("4_gcuxo")
 
-[node name="Slot2Highlight" type="TextureRect" parent="Ability Slots/AbilitySlot2"]
+[node name="Slot2Highlight" type="TextureRect" parent="Upgrade Slots/UpgradeSlot2"]
 visible = false
 layout_mode = 0
 offset_left = -4.0
@@ -114,7 +114,7 @@ offset_right = 36.0
 offset_bottom = 36.0
 texture = ExtResource("6_jxklt")
 
-[node name="Label" type="Label" parent="Ability Slots/AbilitySlot2"]
+[node name="Label" type="Label" parent="Upgrade Slots/UpgradeSlot2"]
 modulate = Color(0, 100, 0, 1)
 layout_mode = 0
 offset_left = 5.0
@@ -123,12 +123,12 @@ offset_bottom = 23.0
 scale = Vector2(0.75, 0.75)
 text = "*"
 
-[node name="Ability Sprite" type="Sprite2D" parent="Ability Slots/AbilitySlot2"]
+[node name="Upgrade Sprite" type="Sprite2D" parent="Upgrade Slots/UpgradeSlot2"]
 z_index = -1
 position = Vector2(16, 16)
 texture = SubResource("AtlasTexture_6jssq")
 
-[node name="CooldownRect" type="TextureRect" parent="Ability Slots/AbilitySlot2"]
+[node name="CooldownRect" type="TextureRect" parent="Upgrade Slots/UpgradeSlot2"]
 modulate = Color(0, 0, 0, 0)
 z_index = -1
 layout_mode = 0
@@ -139,12 +139,12 @@ offset_bottom = 56.0
 scale = Vector2(0.5, 0.5)
 texture = SubResource("CanvasTexture_jbpjp")
 
-[node name="AbilitySlot3" type="TextureRect" parent="Ability Slots"]
+[node name="UpgradeSlot3" type="TextureRect" parent="Upgrade Slots"]
 texture_filter = 1
 layout_mode = 2
 texture = ExtResource("4_gcuxo")
 
-[node name="Label" type="Label" parent="Ability Slots/AbilitySlot3"]
+[node name="Label" type="Label" parent="Upgrade Slots/UpgradeSlot3"]
 modulate = Color(0, 100, 0, 1)
 layout_mode = 0
 offset_left = 5.0
@@ -153,12 +153,12 @@ offset_bottom = 23.0
 scale = Vector2(0.75, 0.75)
 text = "*"
 
-[node name="Ability Sprite" type="Sprite2D" parent="Ability Slots/AbilitySlot3"]
+[node name="Upgrade Sprite" type="Sprite2D" parent="Upgrade Slots/UpgradeSlot3"]
 z_index = -1
 position = Vector2(16, 16)
 texture = SubResource("AtlasTexture_uflt7")
 
-[node name="CooldownRect" type="TextureRect" parent="Ability Slots/AbilitySlot3"]
+[node name="CooldownRect" type="TextureRect" parent="Upgrade Slots/UpgradeSlot3"]
 modulate = Color(0, 0, 0, 0)
 z_index = -1
 layout_mode = 0
@@ -169,13 +169,13 @@ offset_bottom = 56.0
 scale = Vector2(0.5, 0.5)
 texture = SubResource("CanvasTexture_jbpjp")
 
-[node name="AbilitySlot4" type="TextureRect" parent="Ability Slots"]
+[node name="UpgradeSlot4" type="TextureRect" parent="Upgrade Slots"]
 z_index = 4
 texture_filter = 1
 layout_mode = 2
 texture = ExtResource("4_gcuxo")
 
-[node name="Label" type="Label" parent="Ability Slots/AbilitySlot4"]
+[node name="Label" type="Label" parent="Upgrade Slots/UpgradeSlot4"]
 modulate = Color(0, 100, 0, 1)
 layout_mode = 0
 offset_left = 5.0
@@ -184,12 +184,12 @@ offset_bottom = 23.0
 scale = Vector2(0.75, 0.75)
 text = "*"
 
-[node name="Ability Sprite" type="Sprite2D" parent="Ability Slots/AbilitySlot4"]
+[node name="Upgrade Sprite" type="Sprite2D" parent="Upgrade Slots/UpgradeSlot4"]
 z_index = -2
 position = Vector2(16, 16)
 texture = SubResource("AtlasTexture_jbpjp")
 
-[node name="CooldownRect" type="TextureRect" parent="Ability Slots/AbilitySlot4"]
+[node name="CooldownRect" type="TextureRect" parent="Upgrade Slots/UpgradeSlot4"]
 modulate = Color(0, 0, 0, 0)
 z_index = -1
 layout_mode = 0

@@ -1,9 +1,5 @@
 extends CharacterBody2D
 
-@export var bullet_scene: PackedScene
-@export var rocket_scene: PackedScene
-@export var shield_scene: PackedScene
-
 const BASE_SPEED: float = 300.0
 const ROTATION_SPEED: float = 3
 
@@ -27,15 +23,20 @@ var move_flag: bool = false
 var move_intensity: float = 0.0
 var next_cannon_rotation: float = 0.0
 
-# Construct basic player abilities
-var player_cannon: Ability = Ability.create(0.5, 10, Ability.ABILITY_TYPE.CANNON_PRIMARY)
-var player_rocket: Ability = Ability.create(5, 50, Ability.ABILITY_TYPE.CANNON_SECONDARY)
-var player_shield: Ability = Ability.create(10, 3, Ability.ABILITY_TYPE.DEFENSE)
-var player_speed: Ability = Ability.create(7, 300, Ability.ABILITY_TYPE.UTILITY)
+# Player Upgrade Slots
+var player_cannon_primary: Upgrade = UpgradeGlobals.big_bullet.duplicate()
+var player_cannon_secondary: Upgrade = UpgradeGlobals.rocket.duplicate()
+var player_cannon_passive: Upgrade = null
 
-# Play style test - ability 1 & 2 are togglable, upon toggling it switches what is shot out of the cannon when the player left clicks
-# Abilities 3 & 4 are instant activated and will be always accessible when not on cooldown
-var player_activated_cannon: Ability = player_cannon
+var player_defense_active: Upgrade = UpgradeGlobals.energy_shield.duplicate()
+var player_defense_passive: Upgrade = null
+
+var player_utility_active: Upgrade = UpgradeGlobals.nitrous_oxide.duplicate()
+var player_utility_passive: Upgrade = null
+
+# Dictates what fires when the player presses left click
+var player_activated_cannon: Upgrade = player_cannon_primary
+
 
 # Determines who can control the player
 var owner_id: int
@@ -56,7 +57,7 @@ func _enter_tree() -> void:
 	ClientGlobals.on_player_take_damage.connect(on_player_take_damage)
 	ClientGlobals.on_player_hotkey.connect(on_player_hotkey)
 	
-# Network connections for syncing	
+# Network connections for syncing
 func _exit_tree() -> void:
 	ServerGlobals.on_player_sync.disconnect(on_player_sync)
 	ServerGlobals.on_player_shoot.disconnect(on_player_shoot)
@@ -73,10 +74,18 @@ func _ready() -> void:
 	# Temporarily disable collision to spawn correctly
 	$PlayerBodyCollider.disabled = true
 	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_SPAWN, {"player": self})
-	$Ability1Timer.wait_time = player_cannon.cooldown_time
-	$Ability2Timer.wait_time = player_rocket.cooldown_time
-	$Ability3Timer.wait_time = player_shield.cooldown_time
-	$Ability4Timer.wait_time = player_speed.cooldown_time
+	$CannonPrimaryCooldown.wait_time = player_cannon_primary.cooldown_time
+	$CannonSecondaryCooldown.wait_time = player_cannon_secondary.cooldown_time
+	$DefenseCooldown.wait_time = player_defense_active.cooldown_time
+	$UtilityCooldown.wait_time = player_utility_active.cooldown_time
+	if player_cannon_primary.duration > 0:
+		$CannonPrimaryDuration.wait_time = player_cannon_primary.duration
+	if player_cannon_secondary.duration > 0:
+		$CannonSecondaryDuration.wait_time = player_cannon_secondary.duration
+	if player_defense_active.duration > 0:
+		$DefenseDuration.wait_time = player_defense_active.duration
+	if player_utility_active.duration > 0:
+		$UtilityDuration.wait_time = player_utility_active.duration
 
 
 # Called to process client side items such as ui updates and inputs
@@ -133,29 +142,33 @@ func on_player_shoot(id: int) -> void:
 	spawn_bullet()
 
 
+# When a player presses a hotkey, it will first travel to the server for validation and then come here
+# to activate the relevant upgrade
 func on_player_hotkey(id: int, hotkey: int) -> void:
 	if id != owner_id: return
 	match hotkey:
 		# Toggles the active weapon on the cannon
 		PLAYER_HOTKEYS.HOTKEY_WEAPON_TOGGLE:
-			if player_activated_cannon == player_rocket:
-				player_activated_cannon = player_cannon
-				SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_PRIMARY, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
-			elif player_activated_cannon == player_cannon:
-				player_activated_cannon = player_rocket
-				SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY,  {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_SECONDARY, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
+			if Upgrade.is_equal(player_activated_cannon, player_cannon_secondary):
+				player_activated_cannon = player_cannon_primary
+				SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_UPGRADE, {"owner_id": owner_id, "upgrade": Upgrade.CATEGORY.CANNON, "primary": true, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
+			else:
+				player_activated_cannon = player_cannon_secondary
+				SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_UPGRADE,  {"owner_id": owner_id, "upgrade": Upgrade.CATEGORY.CANNON, "primary": false, "started": false, "cooldown_completed": false, "hotkey_pressed": true})
 		PLAYER_HOTKEYS.HOTKEY_DEFENSE:
-			if player_shield.on_cooldown: return
-			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.DEFENSE, "started": true, "cooldown_completed": false, "hotkey_pressed": true})
-			player_shield.on_cooldown = true
-			$Ability3Timer.start()
-			activate_shield()
+			if player_defense_active.on_cooldown: return
+			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_UPGRADE, {"owner_id": owner_id, "upgrade": Upgrade.CATEGORY.DEFENSE, "started": true, "cooldown_completed": false, "hotkey_pressed": true})
+			player_defense_active.on_cooldown = true
+			$DefenseCooldown.start()
+			$DefenseDuration.start()
+			UpgradeGlobals.on_upgrade_activate(player_defense_active, self)
 		PLAYER_HOTKEYS.HOTKEY_UTILITY:
-			if player_speed.on_cooldown: return
-			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.UTILITY, "started": true, "cooldown_completed": false, "hotkey_pressed": true})
-			player_speed.on_cooldown = true
-			$Ability4Timer.start()
-			activate_speed()
+			if player_utility_active.on_cooldown: return
+			SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_UPGRADE, {"owner_id": owner_id, "upgrade": Upgrade.CATEGORY.UTILITY, "started": true, "cooldown_completed": false, "hotkey_pressed": true})
+			player_utility_active.on_cooldown = true
+			$UtilityCooldown.start()
+			$UtilityDuration.start()
+			UpgradeGlobals.on_upgrade_activate(player_utility_active, self)
 
 
 # Upon recieving the packet from the client - update the relevant flags to start moving the player in the process frames
@@ -182,21 +195,21 @@ func on_player_mouse(id: int, mouse_position: Vector2) -> void:
 
 # Client side updating the ui for the cooldowns
 func update_cooldowns() -> void:
-	if player_cannon.on_cooldown:
-		var percent: float = $Ability1Timer.time_left / $Ability1Timer.wait_time
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_PRIMARY, "percent": percent})
+	if player_cannon_primary.on_cooldown:
+		var percent: float = $CannonPrimaryCooldown.time_left / $CannonPrimaryCooldown.wait_time
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "upgrade": Upgrade.CATEGORY.CANNON, "primary": true, "percent": percent})
 		
-	if player_rocket.on_cooldown:
-		var percent: float = $Ability2Timer.time_left / $Ability2Timer.wait_time
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_SECONDARY, "percent": percent})
+	if player_cannon_secondary.on_cooldown:
+		var percent: float = $CannonSecondaryCooldown.time_left / $CannonSecondaryCooldown.wait_time
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "upgrade": Upgrade.CATEGORY.CANNON, "primary": false, "percent": percent})
 		
-	if player_shield.on_cooldown:
-		var percent: float = $Ability3Timer.time_left / $Ability3Timer.wait_time
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.DEFENSE, "percent": percent})
+	if player_defense_active.on_cooldown:
+		var percent: float = $DefenseCooldown.time_left / $DefenseCooldown.wait_time
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "upgrade": Upgrade.CATEGORY.DEFENSE, "percent": percent})
 		
-	if player_speed.on_cooldown:
-		var percent: float = $Ability4Timer.time_left / $Ability4Timer.wait_time
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.UTILITY, "percent": percent})
+	if player_utility_active.on_cooldown:
+		var percent: float = $UtilityCooldown.time_left / $UtilityCooldown.wait_time
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_COOLDOWN_PERCENT, {"owner_id": owner_id, "upgrade": Upgrade.CATEGORY.UTILITY, "percent": percent})
 
 
 # Tracks input for movement actions, sends those inputs to the server for validation
@@ -234,39 +247,28 @@ func update_hotkey_input() -> void:
 		PlayerHotkey.create(owner_id, hotkey).send(NetworkHandler.server_peer)
 
 
-# Activates the players shield temporarily, allowing them to reflect bullets back at their enemy
-func activate_shield() -> void:
-	var shield = shield_scene.instantiate()
-	shield.time_alive = player_shield.potency
-	shield.owner_id = owner_id
-	add_child(shield)
-
-
-# Activates the players speed boost, allowing them to move faster during the duration of the timer
-func activate_speed() -> void:
-	current_speed += player_speed.potency
-	$PlayerSpeedBoostTimer.start()
-	
-
 func spawn_bullet():
 	var bullet
 	# Create the bullet based on which bullet the player has chosen
-	if player_activated_cannon == player_cannon:
-		if player_cannon.on_cooldown: return
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_PRIMARY, "started": true, "cooldown_completed": false, "hotkey_pressed": false})
-		player_cannon.on_cooldown = true
-		$Ability1Timer.start()
-		bullet = bullet_scene.instantiate()
+	if Upgrade.is_equal(player_activated_cannon, player_cannon_primary):
+		if player_cannon_primary.on_cooldown: return
+		# Update UI for cooldown
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_UPGRADE, {"owner_id": owner_id, "upgrade": Upgrade.CATEGORY.CANNON, "primary": true, "started": true, "cooldown_completed": false, "hotkey_pressed": false})
+		# Start the cooldown process
+		player_cannon_primary.on_cooldown = true
+		$CannonPrimaryCooldown.start()
+		bullet = player_cannon_primary.scene.instantiate()
 	else:
-		if player_rocket.on_cooldown: return
-		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_SECONDARY, "started": true, "cooldown_completed": false, "hotkey_pressed": false})
-		player_rocket.on_cooldown = true
-		$Ability2Timer.start()
-		bullet = rocket_scene.instantiate()
+		if player_cannon_secondary.on_cooldown: return
+		# Update UI for cooldown
+		SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_UPGRADE, {"owner_id": owner_id, "upgrade": Upgrade.CATEGORY.CANNON, "primary": false, "started": true, "cooldown_completed": false, "hotkey_pressed": false})
+		# Start the cooldown process
+		player_cannon_secondary.on_cooldown = true
+		$CannonSecondaryCooldown.start()
+		bullet = player_cannon_secondary.scene.instantiate()
 		
-	# Set the damage of the bullet based on the potency of the ability
+	# Set the damage of the bullet based on the potency of the upgrade
 	bullet.damage = player_activated_cannon.potency
-	
 	bullet.global_position = $PlayerBody/PlayerTankGun/BulletSpawnPoint.global_position
 	bullet.global_rotation = $PlayerBody/PlayerTankGun/BulletSpawnPoint.global_rotation
 	bullet.owner_id = owner_id
@@ -286,21 +288,30 @@ func _on_collision_timer_timeout() -> void:
 	if ClientGlobals.id != owner_id:
 		$HealthBar.visible = true
 
-func _on_player_speed_boost_timer_timeout() -> void:
-	current_speed -= player_speed.potency
+	
+func _on_cannon_primary_cooldown_timeout() -> void:
+	player_cannon_primary.on_cooldown = false
+	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_UPGRADE, {"owner_id": owner_id, "upgrade": Upgrade.CATEGORY.CANNON, "primary": true, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
 
-func _on_ability_4_timer_timeout() -> void:
-	player_speed.on_cooldown = false
-	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.UTILITY, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
 
-func _on_ability_3_timer_timeout() -> void:
-	player_shield.on_cooldown = false
-	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.DEFENSE, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
+func _on_cannon_secondary_cooldown_timeout() -> void:
+	player_cannon_secondary.on_cooldown = false
+	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_UPGRADE, {"owner_id": owner_id, "upgrade": Upgrade.CATEGORY.CANNON, "primary": false, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
+	
 
-func _on_ability_2_timer_timeout() -> void:
-	player_rocket.on_cooldown = false
-	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_SECONDARY, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
+func _on_defense_cooldown_timeout() -> void:
+	player_defense_active.on_cooldown = false
+	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_UPGRADE, {"owner_id": owner_id, "upgrade": Upgrade.CATEGORY.DEFENSE, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
 
-func _on_ability_1_timer_timeout() -> void:
-	player_cannon.on_cooldown = false
-	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_ABILITY, {"owner_id": owner_id, "ability": Ability.ABILITY_TYPE.CANNON_PRIMARY, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
+
+func _on_utility_cooldown_timeout() -> void:
+	player_utility_active.on_cooldown = false
+	SignalGlobals.send_signal(SignalGlobals.CHANNEL.PLAYER_UPGRADE, {"owner_id": owner_id, "upgrade": Upgrade.CATEGORY.UTILITY, "started": false, "cooldown_completed": true, "hotkey_pressed": false})
+
+
+func _on_defense_duration_timeout() -> void:
+	UpgradeGlobals.on_upgrade_deactivate(player_defense_active, self)
+
+
+func _on_utility_duration_timeout() -> void:
+	UpgradeGlobals.on_upgrade_deactivate(player_utility_active, self)

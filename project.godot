@@ -22,6 +22,7 @@ ServerGlobals="*res://Scripts/Globals/server_globals.gd"
 ClientGlobals="*res://Scripts/Globals/client_globals.gd"
 SignalGlobals="*res://Scripts/Globals/signal_globals.gd"
 ClientConfig="*res://Scripts/Globals/client_config.gd"
+UpgradeGlobals="*res://Scripts/Globals/upgrade_globals.gd"
 
 [display]
 
