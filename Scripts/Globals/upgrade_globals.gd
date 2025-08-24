@@ -65,6 +65,10 @@ var big_bullet: Upgrade = Upgrade.create(UPGRADE_ID.BIG_BULLET, load("res://Scen
 var rocket: Upgrade = Upgrade.create(UPGRADE_ID.ROCKET, load("res://Scenes/turret_rocket_basic.tscn"), 10, 40, 50, 0.0, Upgrade.CATEGORY.CANNON, Upgrade.TYPE.ACTIVE)
 var energy_shield: Upgrade = Upgrade.create(UPGRADE_ID.ENERGY_SHIELD, load("res://Scenes/shield.tscn"), 15, 40, 0.0, 2, Upgrade.CATEGORY.DEFENSE, Upgrade.TYPE.ACTIVE)
 var nitrous_oxide: Upgrade = Upgrade.create(UPGRADE_ID.NITROUS_OXIDE, null, 12, 25, 0.0, 3, Upgrade.CATEGORY.UTILITY, Upgrade.TYPE.ACTIVE)
+var download_ram: Upgrade = Upgrade.create(UPGRADE_ID.DOWNLOAD_RAM, null, 0.0, 5, 0.0, 0.0, Upgrade.CATEGORY.UTILITY, Upgrade.TYPE.PASSIVE)
+var carbide_chassis: Upgrade = Upgrade.create(UPGRADE_ID.CARBIDE_CHASSIS, null, 0.0, 10, 0.0, 0.0, Upgrade.CATEGORY.DEFENSE, Upgrade.TYPE.PASSIVE)
+var digital_rifling: Upgrade = Upgrade.create(UPGRADE_ID.DIGITAL_RIFLING, null, 0.0, 20, 0.0, 0.0, Upgrade.CATEGORY.CANNON, Upgrade.TYPE.PASSIVE)
+var shrapnel_bullets: Upgrade = Upgrade.create(UPGRADE_ID.SHRAPNEL_BULLETS, null, 0.0, 5, 0.0, 0.0, Upgrade.CATEGORY.CANNON, Upgrade.TYPE.PASSIVE)
 
 
 # Global Handler for upgrades being activated on a player
@@ -80,6 +84,18 @@ func on_upgrade_activate(upgrade: Upgrade, player: CharacterBody2D) -> void:
 		UPGRADE_ID.NITROUS_OXIDE:
 			activate_nitrous_oxide(player)
 			return
+		UPGRADE_ID.DOWNLOAD_RAM:
+			activate_download_ram(player)
+			return
+		UPGRADE_ID.CARBIDE_CHASSIS:
+			activate_carbide_chassis(player)
+			return
+		UPGRADE_ID.DIGITAL_RIFLING:
+			activate_digital_rifling(player)
+			return
+		UPGRADE_ID.SHRAPNEL_BULLETS:
+			activate_shrapnel_bullets(player)
+			return
 
 func on_upgrade_deactivate(upgrade: Upgrade, player: CharacterBody2D) -> void:
 	match upgrade.identifier:
@@ -93,6 +109,19 @@ func on_upgrade_deactivate(upgrade: Upgrade, player: CharacterBody2D) -> void:
 		UPGRADE_ID.NITROUS_OXIDE:
 			deactivate_nitrous_oxide(player)
 			return
+		UPGRADE_ID.DOWNLOAD_RAM:
+			deactivate_download_ram(player)
+			return
+		UPGRADE_ID.CARBIDE_CHASSIS:
+			deactivate_carbide_chassis(player)
+			return
+		UPGRADE_ID.DIGITAL_RIFLING:
+			deactivate_digital_rifling(player)
+			return
+		UPGRADE_ID.SHRAPNEL_BULLETS:
+			deactivate_shrapnel_bullets(player)
+			return
+		
 
 # Upgrade activation
 
@@ -104,6 +133,18 @@ func activate_energy_shield(player: CharacterBody2D) -> void:
 func activate_nitrous_oxide(player: CharacterBody2D) -> void:
 	player.current_speed = player.current_speed * ((100 + player.player_utility_active.potency) / 100)
 
+func activate_download_ram(player: CharacterBody2D) -> void:
+	player.modified_base_speed = player.BASE_SPEED * ((100 + player.player_utility_passive.potency) / 100)
+	player.current_speed = player.modified_base_speed
+	
+func activate_carbide_chassis(player: CharacterBody2D) -> void:
+	player.damage_reduction = player.player_defense_passive.potency
+
+func activate_digital_rifling(player: CharacterBody2D) -> void:
+	player.projectile_speed_modifier = player.player_cannon_passive.potency
+	
+func activate_shrapnel_bullets(player: CharacterBody2D) -> void:
+	player.projectile_damage_modifier = player.player_cannon_passive.potency
 
 # Upgrade Deactivation
 
@@ -114,4 +155,17 @@ func deactivate_energy_shield(player: CharacterBody2D) -> void:
 	shield.queue_free()
 
 func deactivate_nitrous_oxide(player: CharacterBody2D) -> void:
-	player.current_speed = player.BASE_SPEED
+	player.current_speed = player.modified_base_speed
+
+func deactivate_download_ram(player) -> void:
+	player.modified_base_speed = player.BASE_SPEED
+	player.current_speed = player.modified_base_speed
+
+func deactivate_carbide_chassis(player: CharacterBody2D) -> void:
+	player.damage_reduction = 0.0
+
+func deactivate_digital_rifling(player: CharacterBody2D) -> void:
+	player.projectile_speed_modifier = 0.0
+
+func deactivate_shrapnel_bullets(player: CharacterBody2D) -> void:
+	player.projectile_damage_modifier = 0.0

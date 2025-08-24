@@ -3,7 +3,8 @@ extends CharacterBody2D
 const BASE_SPEED: float = 300.0
 const ROTATION_SPEED: float = 3
 
-var current_speed: float = BASE_SPEED
+var modified_base_speed: float = BASE_SPEED
+var current_speed: float = modified_base_speed
 var player_max_health: int = 100
 var player_health: int = 100
 
@@ -26,16 +27,21 @@ var next_cannon_rotation: float = 0.0
 # Player Upgrade Slots
 var player_cannon_primary: Upgrade = UpgradeGlobals.big_bullet.duplicate()
 var player_cannon_secondary: Upgrade = UpgradeGlobals.rocket.duplicate()
-var player_cannon_passive: Upgrade = null
+var player_cannon_passive: Upgrade = UpgradeGlobals.shrapnel_bullets.duplicate()
 
 var player_defense_active: Upgrade = UpgradeGlobals.energy_shield.duplicate()
-var player_defense_passive: Upgrade = null
+var player_defense_passive: Upgrade = UpgradeGlobals.carbide_chassis.duplicate()
 
 var player_utility_active: Upgrade = UpgradeGlobals.nitrous_oxide.duplicate()
-var player_utility_passive: Upgrade = null
+var player_utility_passive: Upgrade = UpgradeGlobals.download_ram.duplicate()
 
 # Dictates what fires when the player presses left click
 var player_activated_cannon: Upgrade = player_cannon_primary
+
+# Upgrade modifiers
+var damage_reduction: float = 0.0
+var projectile_damage_modifier: float = 0.0
+var projectile_speed_modifier: float = 0.0
 
 
 # Determines who can control the player
@@ -86,6 +92,22 @@ func _ready() -> void:
 		$DefenseDuration.wait_time = player_defense_active.duration
 	if player_utility_active.duration > 0:
 		$UtilityDuration.wait_time = player_utility_active.duration
+	
+	# Apply the passive upgrades
+	if player_cannon_passive != null:
+		UpgradeGlobals.on_upgrade_activate(player_cannon_passive, self)
+	
+	if player_defense_passive != null:
+		UpgradeGlobals.on_upgrade_activate(player_defense_passive, self)
+	
+	if player_utility_passive != null:
+		UpgradeGlobals.on_upgrade_activate(player_utility_passive, self)
+	
+	# Apply modifiers to upgrades
+	player_cannon_primary.potency += ceil(player_cannon_primary.potency * (projectile_damage_modifier / 100))
+	player_cannon_secondary.potency += ceil(player_cannon_secondary.potency * (projectile_damage_modifier / 100))
+	player_cannon_primary.speed += ceil(player_cannon_primary.speed * (projectile_speed_modifier / 100))
+	player_cannon_secondary.speed += ceil(player_cannon_secondary.speed * (projectile_speed_modifier / 100))
 
 
 # Called to process client side items such as ui updates and inputs
@@ -275,9 +297,10 @@ func spawn_bullet():
 	get_tree().get_root().add_child(bullet)
 
 
-func take_damage(damage: int) -> void:
-	player_health -= damage
-	on_damage_recieved.emit(damage)
+func take_damage(damage: float) -> void:
+	var damage_recieved: int = floor(damage - (damage * (damage_reduction / 100)))
+	player_health -= damage_recieved
+	on_damage_recieved.emit(damage_recieved)
 	if (player_health <= 0):
 		queue_free()
 	
